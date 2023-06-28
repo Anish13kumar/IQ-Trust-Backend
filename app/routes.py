@@ -106,9 +106,9 @@ def events_get_all():
 @main_routes.get("/events/<eventid>")
 def events_get_eventid(eventid):
     try:
-        id = request.args.get("uid")
-        if current_app.config["SESSION_ID"] != id:
-            return {"message": "Please Login And Continue", "status": False}
+        # id = request.args.get("uid")
+        # if current_app.config["SESSION_ID"] != id:
+        #     return {"message": "Please Login And Continue", "status": False}
 
         db = current_app.config['MONGO']
        
@@ -308,7 +308,7 @@ def volunteers_show():
 
         title = request.args.get('count')
         if title == "1":
-            data = db.volunteers.find({"status": True})
+            data = list(db.volunteers.find({"status": True}))
             return {"message": len(data), "status": True}
         else:
             data1 = list(db.volunteers.find())
