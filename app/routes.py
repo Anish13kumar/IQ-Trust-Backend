@@ -411,6 +411,43 @@ def admin_volunteers_reject(volid):
 
     except Exception as e:
         return {"message": str(e), "status": False}
+    
+
+@main_routes.post("/contact")
+def contact_post():
+    try:
+        data = request.form
+        db = current_app.config["MONGO"]
+        name = data.get("name")
+        email = data.get("email")
+        phone = data.get("phone")
+        subject = data.get("subject")
+        message = data.get("message")
+
+        if not name or not email or not phone or not subject or not message:
+            return {"message":"All Fields are required","status":False}
+        else:
+            db.contact.insert_one({"name":name,"email":email,"phone":phone,"subject":subject,"message":message})
+            return {"message":"Message Sent Successfully","status":True}
+    except Exception as e:
+        return {"message":str(e),"status":False}
+
+
+@main_routes.get("/contact")
+def contact_get():
+    try:
+        id = request.args.get("uid")
+        if current_app.config["SESSION_ID"] != id:
+            return {"message": "Please Login And Continue", "status": False}
+        
+        db = current_app.config["MONGO"]
+        count = request.args.get("count")
+        if count == "1":
+            data = list(db.contact.find())
+            return jsonify(data)
+
+    except Exception as e:
+        return {"message":str(e),"status":False}
 
 
 # This Function is to delete a single image from the gallery page based on the condition in the above
