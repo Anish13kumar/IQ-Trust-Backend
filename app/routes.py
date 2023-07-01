@@ -441,10 +441,11 @@ def contact_get():
             return {"message": "Please Login And Continue", "status": False}
         
         db = current_app.config["MONGO"]
-        count = request.args.get("count")
-        if count == "1":
-            data = list(db.contact.find())
-            return jsonify(data)
+        data1 = list(db.contact.find())
+        for i, doc in enumerate(data1):
+            data1[i]['_id'] = str(doc['_id'])
+
+        return jsonify(data1)
 
     except Exception as e:
         return {"message":str(e),"status":False}
